@@ -5,10 +5,10 @@ close all
 clc
 
 % Define properties of the bodyes
-m=1;
-k=2;
+m=60;
+k=2.5;
 M = [m 0 0; 0 m 0; 0 0 m];
-K = [k -k 0; -k k -k; 0 -k k];
+K = [k -k 0; -k 2*k -k; 0 -k k];
 
 Lf = [1 0 0]';
 Lu = [0 0 1];
@@ -30,8 +30,8 @@ end
 
 [L,eigv]=eig(K,M);
 
-modal_mass = L'*M;
-modal_stiffness = L'*K;
+modal_mass = L'*M*L;
+modal_stiffness = L'*K*L;
 modal_force = L'*Lf;
 
 H_MDM = zeros(length(omg),1);
@@ -51,14 +51,18 @@ end
 
 
 % Direct recovery
-figure(1)%m = diag(M);
+figure(1)
 loglog(omg,abs(H));
+grid on
 figure(2)
 semilogx(omg,mag2db(abs(H)));
+grid on
 
 % Recovery using modes
 figure(3)
 loglog(omg,abs(H_MDM));
+grid on
 figure(4)
 semilogx(omg,mag2db(abs(H_MDM)));
+grid on
 
